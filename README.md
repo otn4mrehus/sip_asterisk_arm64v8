@@ -5,12 +5,42 @@ SIP Server dengan Asterisk pada Armbian 64 Bit (STB-B860H/HG680P) untuk Arsitekt
 ## Direktori Host
 
 ````
-mkdir -p asterisk/{asterisk-config,asterisk-logs,asterisk-data,asterisk-spool}
+mkdir -p sip_asterisk_arm64v8/{asterisk-config,asterisk-logs,asterisk-data,asterisk-spool}
 cd asterisk
+````
+## Buatkan docker-compose.yaml di direktori host (direktori saat ini docker-compose.yaml dibuatkan)
+````
+version: '3.3'
+
+services:
+  asterisk:
+    image: andrius/asterisk:18-arm64
+    container_name: asterisk_sip_server
+    restart: unless-stopped
+    environment:
+      - ASTERISK_UID=1000
+      - ASTERISK_GID=1000
+    volumes:
+      - ./asterisk-config:/etc/asterisk
+      - ./asterisk-logs:/var/log/asterisk
+      - ./asterisk-data:/var/lib/asterisk
+      - ./asterisk-spool:/var/spool/asterisk
+    ports:
+      - "5060:5060/udp"  # SIP UDP
+      - "5060:5060/tcp"  # SIP TCP
+      - "10000-20000:10000-20000/udp"  # RTP ports
+    networks:
+      - sip_network
+    command: ["/usr/sbin/asterisk", "-f"]
+
+networks:
+  sip_network:
+    driver: bridge
+
 ````
 
 ## File Konfigurasi Asterisk
-#### Buat sip.conf di direktori asterisk-config:
+#### Buatkan sip.conf di direktori asterisk-config:
 ````
 [general]
 context=default
