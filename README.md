@@ -6,7 +6,7 @@ SIP Server dengan Asterisk pada Armbian 64 Bit (STB-B860H/HG680P) untuk Arsitekt
 
 ````
 mkdir -p sip_asterisk_arm64v8/{asterisk-config,asterisk-logs,asterisk-data,asterisk-spool}
-cd asterisk
+cd sip_asterisk_arm64v8
 ````
 ## Buatkan docker-compose.yaml di direktori host (direktori saat ini docker-compose.yaml dibuatkan)
 ````
